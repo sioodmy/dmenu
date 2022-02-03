@@ -154,8 +154,7 @@ drawmenu(void)
 
 	if (prompt && *prompt) {
 		drw_setscheme(drw, scheme[SchemeSel]);
-		x = drw_text(drw, x, 0, promptw+=mw, bh, lrpad / 2, prompt, 0);
-
+		drw_text(drw, x, 0, mw, bh, lrpad / 2, prompt, 0);
 	}
 	/* draw input field */
 	w = (lines > 0 || !matches) ? mw - x : inputw;
@@ -165,7 +164,7 @@ drawmenu(void)
 	curpos = TEXTW(text) - TEXTW(&text[cursor]);
 	if ((curpos += lrpad / 2 - 1) < w) {
 		drw_setscheme(drw, scheme[SchemeNorm]);
-		drw_rect(drw, 0 + curpos, (prompt ? 2 + (bh -fh) / 2 + bh: 2 + (bh - fh) / 2) , 2, fh - 4, 1, 0);
+		drw_rect(drw, x + curpos, (prompt ? 2 + (bh -fh) / 2 + bh: 2 + (bh - fh) / 2) , 2, fh - 4, 1, 0);
 	}
 
 	if (lines > 0) {
@@ -189,7 +188,7 @@ drawmenu(void)
 			drw_text(drw, mw - w, 0, w, bh, lrpad / 2, ">", 0);
 		}
 	}
-	drw_map(drw, win, 0, 0, mw, mh);
+	drw_map(drw, win, 0, 0, mw+bh, mh);
 }
 
 static void
@@ -877,7 +876,7 @@ setup(void)
 	bh = drw->fonts->h + 2;
 	bh = MAX(bh,lineheight);	/* make a menu line AT LEAST 'lineheight' tall */
 	lines = MAX(lines, 0);
-	mh = (lines + 1) * bh;
+	mh = (lines + (prompt ? 2 : 1)) * bh;
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 #ifdef XINERAMA
 	i = 0;
